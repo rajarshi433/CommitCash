@@ -7,13 +7,119 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model User {
-  id            String   @id @default(cuid())
-  name          String
-  email         String   @unique
-  provider      String   @unique
-  photoUrl      String?
-  createdAt     DateTime @default(now())
-  lastLogin     DateTime @updatedAt
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  provider  String
+  photoUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  zaps Zaps[]
 }
 
+model Zaps {
+  id             String   @id @default(cuid())
+
+  zapOwnerId     String 
+  zapOwner       User?    @relation(fields: [zapOwnerId], references: [id])
+
+  bankCred       String?
+  isActive       Boolean  @default(true)
+  zapName        String
+  description    String?
+  githubId       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  zapHits            ZapHit[]
+  bountyClaims       BountyClaims[]
+  bountyClaimsOutbox BountyClaimsOutbox[] 
+  bountyReceives     BountyReceives[]
+  whiteListId        WhiteList?
+}
+
+model ZapHit {
+  id               String   @id @default(cuid())
+
+  zapId            String
+  zap              Zaps     @relation(fields: [zapId], references: [id])
+
+  zapOwnerId       String
+  bountyGiverId    String
+  bountyReceiverId String
+  bountyAmount     Float
+  status           Status @default(WAITING_TO_CLAIM)
+  commentlink      String
+  createdAt        DateTime @default(now())
+  isActive         Boolean  @default(true)
+
+  bountyReceivesId BountyReceives?
+}
+
+model WhiteList {
+  id         String   @id @default(cuid())
+
+  zapId      String   @unique
+  zap        Zaps     @relation(fields: [zapId], references: [id])
+
+  zapOwnerId String
+  githubId   String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model BountyClaims {
+  id           String   @id @default(cuid())
+
+  zapId        String
+  zap          Zaps     @relation(fields: [zapId], references: [id])
+
+  githubId     String
+  bankCreds    String?
+  isSuccess    Boolean  @default(false)
+  bountyAmount Float
+  createdAt    DateTime @default(now())
+}
+
+model BountyClaimsOutbox {
+  id           String   @id @default(cuid())
+
+  zapId        String
+  zap          Zaps     @relation(fields: [zapId], references: [id])
+
+  githubId     String
+  bankCreds    String?
+  isSuccess    Boolean  @default(false)
+  bountyAmount Float
+  createdAt    DateTime @default(now())
+}
+
+model BountyReceives {
+  id          String   @id @default(cuid())
+
+  zapId       String
+  zap         Zaps     @relation(fields: [zapId], references: [id])
+
+  zapHitId    String   @unique
+  zapHit      ZapHit   @relation(fields: [zapHitId], references: [id])
+
+  githubId    String
+  hasReceived Boolean  @default(true)
+  bountyAmt   Float
+  zapOwnerId  String
+  commentLink String
+  createdAt   DateTime @default(now())
+}
+
+
+
+enum Status{
+  WAITING_TO_CLAIM
+  QUEUED_FOR_MONEY_TRANSFER
+  FAILED
+  SUCCESS
+  FAILED_AS_UNCLAIMED_FOR_3_DAYS
+}

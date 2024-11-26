@@ -17,14 +17,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  zaps Zaps[]
+  zaps      Zaps[]
 }
 
 model Zaps {
   id             String   @id @default(cuid())
 
   zapOwnerId     String 
-  zapOwner       User?    @relation(fields: [zapOwnerId], references: [id])
+  zapOwner       User    @relation(fields: [zapOwnerId], references: [id])
 
   bankCred       String?
   isActive       Boolean  @default(true)
@@ -52,7 +52,7 @@ model ZapHit {
   bountyReceiverId String
   bountyAmount     Float
   status           Status @default(WAITING_TO_CLAIM)
-  commentlink      String
+  commentLink      String
   createdAt        DateTime @default(now())
   isActive         Boolean  @default(true)
 

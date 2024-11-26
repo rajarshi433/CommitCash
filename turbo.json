@@ -1,39 +1,39 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "ui": "tui",
-  "tasks": {
-    "build": {
-      "dependsOn": ["^db:generate", "^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "generate": {
-      "dependsOn": ["^generate"]
-    },
-    "db:generate": {
-      "dependsOn": ["^db:generate"],
-      "cache": false
-    },
-    "db:migrate:deploy": {},
-    "db:migrate:dev": {
-      "dependsOn": ["^db:migrate:dev"],
-      "interactive": true,
-      "cache": false
-    },
-    "db:push": {},
-    "db:seed": {},
-    "db:studio": {
-      "dependsOn": ["^db:studio"]
+    "$schema": "https://turbo.build/schema.json",
+    "ui": "tui",
+    "tasks": {
+        "build": {
+            "dependsOn": ["^db:generate", "^build"],
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "lint": {
+            "dependsOn": ["^lint"]
+        },
+        "check-types": {
+            "dependsOn": ["^check-types"]
+        },
+        "dev": {
+            "cache": false,
+            "persistent": true
+        },
+        "generate": {
+            "dependsOn": ["^generate"]
+        },
+        "db:generate": {
+            "dependsOn": ["^db:generate"],
+            "cache": false
+        },
+        "db:migrate:deploy": {},
+        "db:migrate:dev": {
+            "dependsOn": ["^db:migrate:dev"],
+            "interactive": true,
+            "cache": false
+        },
+        "db:push": {},
+        "db:seed": {},
+        "db:studio": {
+            "dependsOn": ["^db:studio"]
+        }
     }
-  }
 }

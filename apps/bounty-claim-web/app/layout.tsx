@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggler } from "@/components/ThemeToggler/ThemeToggler";
 
 export const metadata: Metadata = {
     title: "Claim",
@@ -15,17 +13,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <ThemeToggler />
-                    {children}
-                </ThemeProvider>
-            </body>
+            <body>{children}</body>
         </html>
     );
 }

@@ -29,14 +29,16 @@ app.post(
         const zapOwnerId = req.params.userId as string;
 
         const webhookBody = req.body;
-        const parsedBody = parseWebhookBody(webhookBody);
+        const parsedBody = await parseWebhookBody(webhookBody);
 
         try {
             const zapHit = await prisma.zapHit.create({
                 data: {
                     zapId,
                     zapOwnerId,
-                    bountyGiverId: parsedBody.bountyGiverId,
+                    bountyGiverUsername: parsedBody.bountyGiverUsername,
+                    bountyGiverId: Number(parsedBody.bountyGiverId),
+                    bountyReceiverUsername: parsedBody.bountyReceiverUsername,
                     bountyReceiverId: parsedBody.bountyReceiverId,
                     bountyAmount: Number(parsedBody.bountyAmount),
                     commentLink: parsedBody.commentLink,

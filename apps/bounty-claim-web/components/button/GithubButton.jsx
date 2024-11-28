@@ -3,11 +3,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { FaGithub } from "react-icons/fa6";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 const GithubButton = () => {
-    const handleOnclick = async () => {
-        await signIn("github");
+
+
+    const handleOnclick = async (e) => {
+        e.preventDefault()
+        const res = await signIn("github");
+
+        console.log(res)
     };
 
     return (
@@ -21,6 +26,8 @@ const GithubButton = () => {
                     Verify GitHub
                 </span>
             </Button>
+
+            <button className="text-white my-4 border border-white p-4" onClick={() => signOut()}>Logout</button>
         </>
     );
 };

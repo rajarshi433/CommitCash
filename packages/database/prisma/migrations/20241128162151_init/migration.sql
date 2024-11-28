@@ -1,20 +1,18 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `lastLogin` on the `User` table. All the data in the column will be lost.
-  - Added the required column `updatedAt` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "Status" AS ENUM ('WAITING_TO_CLAIM', 'QUEUED_FOR_MONEY_TRANSFER', 'FAILED', 'SUCCESS', 'FAILED_AS_UNCLAIMED_FOR_3_DAYS');
 
--- DropIndex
-DROP INDEX "User_provider_key";
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
+    "provider" TEXT NOT NULL,
+    "photoUrl" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "lastLogin",
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL,
-ALTER COLUMN "name" DROP NOT NULL;
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Zaps" (
@@ -24,7 +22,8 @@ CREATE TABLE "Zaps" (
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "zapName" TEXT NOT NULL,
     "description" TEXT,
-    "githubId" TEXT NOT NULL,
+    "githubUsername" TEXT NOT NULL,
+    "githubId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -36,11 +35,13 @@ CREATE TABLE "ZapHit" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
     "zapOwnerId" TEXT NOT NULL,
-    "bountyGiverId" TEXT NOT NULL,
-    "bountyReceiverId" TEXT NOT NULL,
+    "bountyGiverUsername" TEXT NOT NULL,
+    "bountyGiverId" INTEGER NOT NULL,
+    "bountyReceiverUsername" TEXT NOT NULL,
+    "bountyReceiverId" INTEGER NOT NULL,
     "bountyAmount" DOUBLE PRECISION NOT NULL,
     "status" "Status" NOT NULL DEFAULT 'WAITING_TO_CLAIM',
-    "commentlink" TEXT NOT NULL,
+    "commentLink" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
 
@@ -52,7 +53,8 @@ CREATE TABLE "WhiteList" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
     "zapOwnerId" TEXT NOT NULL,
-    "githubId" TEXT[],
+    "githubUsername" TEXT[],
+    "githubId" INTEGER[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -63,7 +65,8 @@ CREATE TABLE "WhiteList" (
 CREATE TABLE "BountyClaims" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
-    "githubId" TEXT NOT NULL,
+    "githubUsername" TEXT NOT NULL,
+    "githubId" INTEGER NOT NULL,
     "bankCreds" TEXT,
     "isSuccess" BOOLEAN NOT NULL DEFAULT false,
     "bountyAmount" DOUBLE PRECISION NOT NULL,
@@ -76,7 +79,8 @@ CREATE TABLE "BountyClaims" (
 CREATE TABLE "BountyClaimsOutbox" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
-    "githubId" TEXT NOT NULL,
+    "githubUsername" TEXT NOT NULL,
+    "githubId" INTEGER NOT NULL,
     "bankCreds" TEXT,
     "isSuccess" BOOLEAN NOT NULL DEFAULT false,
     "bountyAmount" DOUBLE PRECISION NOT NULL,
@@ -90,7 +94,8 @@ CREATE TABLE "BountyReceives" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
     "zapHitId" TEXT NOT NULL,
-    "githubId" TEXT NOT NULL,
+    "githubUsername" TEXT NOT NULL,
+    "githubId" INTEGER NOT NULL,
     "hasReceived" BOOLEAN NOT NULL DEFAULT true,
     "bountyAmt" DOUBLE PRECISION NOT NULL,
     "zapOwnerId" TEXT NOT NULL,
@@ -99,6 +104,9 @@ CREATE TABLE "BountyReceives" (
 
     CONSTRAINT "BountyReceives_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "WhiteList_zapId_key" ON "WhiteList"("zapId");

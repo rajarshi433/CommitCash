@@ -24,13 +24,14 @@ model Zaps {
   id             String   @id @default(cuid())
 
   zapOwnerId     String 
-  zapOwner       User    @relation(fields: [zapOwnerId], references: [id])
+  zapOwner       User     @relation(fields: [zapOwnerId], references: [id])
 
   bankCred       String?
   isActive       Boolean  @default(true)
   zapName        String
   description    String?
-  githubId       String
+  githubUsername String
+  githubId       Int
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -42,76 +43,82 @@ model Zaps {
 }
 
 model ZapHit {
-  id               String   @id @default(cuid())
+  id                     String   @id @default(cuid())
 
-  zapId            String
-  zap              Zaps     @relation(fields: [zapId], references: [id])
+  zapId                  String
+  zap                    Zaps     @relation(fields: [zapId], references: [id])
 
-  zapOwnerId       String
-  bountyGiverId    String
-  bountyReceiverId String
-  bountyAmount     Float
-  status           Status @default(WAITING_TO_CLAIM)
-  commentLink      String
-  createdAt        DateTime @default(now())
-  isActive         Boolean  @default(true)
+  zapOwnerId             String
+  bountyGiverUsername    String
+  bountyGiverId          Int
+  bountyReceiverUsername String
+  bountyReceiverId       Int
+  bountyAmount           Float
+  status                 Status   @default(WAITING_TO_CLAIM)
+  commentLink            String
+  createdAt              DateTime @default(now())
+  isActive               Boolean  @default(true)
 
   bountyReceivesId BountyReceives?
 }
 
 model WhiteList {
-  id         String   @id @default(cuid())
+  id               String   @id @default(cuid())
 
-  zapId      String   @unique
-  zap        Zaps     @relation(fields: [zapId], references: [id])
+  zapId            String   @unique
+  zap              Zaps     @relation(fields: [zapId], references: [id])
 
-  zapOwnerId String
-  githubId   String[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  zapOwnerId       String
+  githubUsername   String[]
+  githubId         Int[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model BountyClaims {
-  id           String   @id @default(cuid())
+  id             String   @id @default(cuid())
 
-  zapId        String
-  zap          Zaps     @relation(fields: [zapId], references: [id])
+  zapId          String
+  zap            Zaps     @relation(fields: [zapId], references: [id])
 
-  githubId     String
-  bankCreds    String?
-  isSuccess    Boolean  @default(false)
-  bountyAmount Float
-  createdAt    DateTime @default(now())
+  githubUsername String
+  githubId       Int
+  bankCreds      String?
+  isSuccess      Boolean  @default(false)
+  bountyAmount   Float
+  createdAt      DateTime @default(now())
 }
 
 model BountyClaimsOutbox {
-  id           String   @id @default(cuid())
+  id             String   @id @default(cuid())
 
-  zapId        String
-  zap          Zaps     @relation(fields: [zapId], references: [id])
+  zapId          String
+  zap            Zaps     @relation(fields: [zapId], references: [id])
 
-  githubId     String
-  bankCreds    String?
-  isSuccess    Boolean  @default(false)
-  bountyAmount Float
-  createdAt    DateTime @default(now())
+  githubUsername String
+  githubId       Int
+  bankCreds      String?
+  isSuccess      Boolean  @default(false)
+  bountyAmount   Float
+  createdAt      DateTime @default(now())
 }
 
 model BountyReceives {
-  id          String   @id @default(cuid())
+  id             String   @id @default(cuid())
 
-  zapId       String
-  zap         Zaps     @relation(fields: [zapId], references: [id])
+  zapId          String
+  zap            Zaps     @relation(fields: [zapId], references: [id])
 
-  zapHitId    String   @unique
-  zapHit      ZapHit   @relation(fields: [zapHitId], references: [id])
+  zapHitId       String   @unique
+  zapHit         ZapHit   @relation(fields: [zapHitId], references: [id])
 
-  githubId    String
-  hasReceived Boolean  @default(true)
-  bountyAmt   Float
-  zapOwnerId  String
-  commentLink String
-  createdAt   DateTime @default(now())
+  githubUsername String
+  githubId       Int
+  hasReceived    Boolean  @default(true)
+  bountyAmt      Float
+  zapOwnerId     String
+  commentLink    String
+  createdAt      DateTime @default(now())
 }
 
 

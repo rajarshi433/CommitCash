@@ -28,6 +28,6 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "next.config.mjs"
-    ],
+, "components/button/GithubButton.jsx"    ],
     "exclude": ["node_modules"]
 }

@@ -10,7 +10,9 @@ const GithubButton = () => {
 
     const handleOnclick = async (e) => {
         e.preventDefault()
-        const res = await signIn("github");
+        const res = await signIn("github", {
+            callbackUrl: `/${2}/bankcreds`
+        });
 
         console.log(res)
     };

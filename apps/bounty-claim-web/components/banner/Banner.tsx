@@ -8,7 +8,7 @@ const Banner = () => {
                 <div className="flex flex-col justify-center sm:flex-row sm:items-center sm:justify-start">
                     <a
                         href="#"
-                        className="flex justify-center bg-yellow-400 p-2 rounded-md mb-2 sm:mb-0"
+                        className="flex justify-center bg-yellow-400 text-black p-2 rounded-md mb-2 sm:mb-0"
                     >
                         <FaCodeFork size={18} className="my-auto" />
                         <span className="text-md font-mono font-extrabold ml-1">

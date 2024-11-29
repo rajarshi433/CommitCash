@@ -60,6 +60,8 @@ model ZapHit {
   isActive               Boolean  @default(true)
 
   bountyReceivesId BountyReceives?
+  bountyClaimsId BountyClaims?
+  bountyClaimsOutboxId BountyClaimsOutbox?
 }
 
 model WhiteList {
@@ -81,6 +83,9 @@ model BountyClaims {
   zapId          String
   zap            Zaps     @relation(fields: [zapId], references: [id])
 
+  zapHitId       String   @unique
+  zapHit         ZapHit   @relation(fields: [zapHitId], references: [id])
+
   githubUsername String
   githubId       Int
   bankCreds      String?
@@ -94,6 +99,9 @@ model BountyClaimsOutbox {
 
   zapId          String
   zap            Zaps     @relation(fields: [zapId], references: [id])
+
+  zapHitId       String   @unique
+  zapHit         ZapHit   @relation(fields: [zapHitId], references: [id])
 
   githubUsername String
   githubId       Int

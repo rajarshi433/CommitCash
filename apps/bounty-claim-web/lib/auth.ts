@@ -3,21 +3,22 @@ import { Account, NextAuthOptions, Profile, Session, User } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import { JWT } from "next-auth/jwt";
 import GitHubProvider from "next-auth/providers/github";
+import { BountyDescriptionType } from '@repo/common';
 
-type BountyDescription = {
-    id: string;
-    zapId: string;
-    zapOwnerId: string;
-    bountyGiverUsername: string;
-    bountyGiverId: number;
-    bountyReceiverUsername: string;
-    bountyReceiverId: number;
-    bountyAmount: number;
-    status: string;
-    commentLink: string;
-    createdAt: Date;
-    isActive: boolean;
-};
+// type BountyDescription = {
+//     id: string;
+//     zapId: string;
+//     zapOwnerId: string;
+//     bountyGiverUsername: string;
+//     bountyGiverId: number;
+//     bountyReceiverUsername: string;
+//     bountyReceiverId: number;
+//     bountyAmount: number;
+//     status: string;
+//     commentLink: string;
+//     createdAt: Date;
+//     isActive: boolean;
+// };
 
 declare module "next-auth" {
     interface Profile {
@@ -25,18 +26,18 @@ declare module "next-auth" {
     }
 
     interface User {
-        bounties: BountyDescription[];
+        bounties: BountyDescriptionType[];
     }
 
     interface Session {
         user: {
-            bounties: BountyDescription[];
+            bounties: BountyDescriptionType[];
         };
     }
 
     interface JWT {
         token: {
-            bounties: BountyDescription[];
+            bounties: BountyDescriptionType[];
         };
     }
 }
@@ -69,6 +70,8 @@ export const authOptions: NextAuthOptions = {
                 const bounties = await prisma.zapHit.findMany({
                     where: {
                         bountyReceiverId: githubId,
+                        isActive: true,
+                        status: "WAITING_TO_CLAIM",
                     },
                 });
 
@@ -91,7 +94,7 @@ export const authOptions: NextAuthOptions = {
 
         async session({ session, token }: { session: Session; token: JWT }) {
             if (token.bounties) {
-                session.user.bounties = token.bounties as BountyDescription[];
+                session.user.bounties = token.bounties as BountyDescriptionType[];
             }
             return session;
         },

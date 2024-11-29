@@ -1,41 +1,34 @@
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import React from "react";
+"use client"
 
-const page = () => {
-    export function InputForm() {
-        const form = useForm<z.infer<typeof FormSchema>>({
-            resolver: zodResolver(FormSchema),
-            defaultValues: {
-                username: "",
-            },
-        });
+import { submitBountyClaims } from "@/actions/submitBountyClaims";
+import { useFormState } from "react-dom";
 
-        return (
-            <Form {...form}>
-                <form className="w-2/3 space-y-6">
-                    <FormField
-                        control={form.control}
-                        name="username"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Username</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="shadcn" {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    This is your public display name.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
-        );
-    }
+const BankCreds = () => {
+    const [error, action, isPending] = useFormState(submitBountyClaims, null);
+
+    return (
+        <>
+            <form action={action}>
+                <input
+                    name="acn"
+                    type="text"
+                    placeholder="Account Number"
+                    className="text-black"
+                />
+                <button
+                    type="submit"
+                    value="Save"
+                    className="border border-white ml-2"
+                    disabled={isPending}
+                >
+                    submit
+                </button>
+
+                {isPending && <p className="text-white text-3xl">Loading....</p>}
+                {error && <p>{JSON.stringify(error)} </p>}
+            </form>
+        </>
+    );
 };
 
-export default page;
+export default BankCreds;

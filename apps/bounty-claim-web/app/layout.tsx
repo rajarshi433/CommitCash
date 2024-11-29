@@ -13,7 +13,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body>{children}</body>
+            <body className="flex flex-col justify-center items-center bg-[#1C1917] text-white h-screen overflow-hidden">
+                {children}
+            </body>
         </html>
     );
 }

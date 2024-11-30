@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 
 const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
     const zapId = req.params.zapId;
-    const bountyGiverId = req.body.sender.id;
+    const bountyGiverId = req.body.sender.id as number;
 
     const zap = await prisma.zaps.findFirst({
         where: {

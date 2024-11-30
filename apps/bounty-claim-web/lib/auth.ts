@@ -3,22 +3,7 @@ import { Account, NextAuthOptions, Profile, Session, User } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import { JWT } from "next-auth/jwt";
 import GitHubProvider from "next-auth/providers/github";
-import { BountyDescriptionType } from '@repo/common';
-
-// type BountyDescription = {
-//     id: string;
-//     zapId: string;
-//     zapOwnerId: string;
-//     bountyGiverUsername: string;
-//     bountyGiverId: number;
-//     bountyReceiverUsername: string;
-//     bountyReceiverId: number;
-//     bountyAmount: number;
-//     status: string;
-//     commentLink: string;
-//     createdAt: Date;
-//     isActive: boolean;
-// };
+import { BountyDescriptionType } from "@repo/common";
 
 declare module "next-auth" {
     interface Profile {
@@ -94,7 +79,8 @@ export const authOptions: NextAuthOptions = {
 
         async session({ session, token }: { session: Session; token: JWT }) {
             if (token.bounties) {
-                session.user.bounties = token.bounties as BountyDescriptionType[];
+                session.user.bounties =
+                    token.bounties as BountyDescriptionType[];
             }
             return session;
         },

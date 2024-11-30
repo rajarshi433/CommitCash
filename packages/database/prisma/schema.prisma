@@ -92,6 +92,8 @@ model BountyClaims {
   isSuccess      Boolean  @default(false)
   bountyAmount   Float
   createdAt      DateTime @default(now())
+
+  bountyReceives BountyReceives?
 }
 
 model BountyClaimsOutbox {
@@ -112,21 +114,24 @@ model BountyClaimsOutbox {
 }
 
 model BountyReceives {
-  id             String   @id @default(cuid())
+  id             String       @id @default(cuid())
 
   zapId          String
-  zap            Zaps     @relation(fields: [zapId], references: [id])
+  zap            Zaps         @relation(fields: [zapId], references: [id])
 
-  zapHitId       String   @unique
-  zapHit         ZapHit   @relation(fields: [zapHitId], references: [id])
+  zapHitId       String       @unique
+  zapHit         ZapHit       @relation(fields: [zapHitId], references: [id])
+
+  bountyClaimId  String       @unique
+  bountyClaim    BountyClaims @relation(fields: [bountyClaimId], references: [id])
 
   githubUsername String
   githubId       Int
-  hasReceived    Boolean  @default(true)
+  hasReceived    Boolean      @default(true)
   bountyAmt      Float
   zapOwnerId     String
   commentLink    String
-  createdAt      DateTime @default(now())
+  createdAt      DateTime     @default(now())
 }
 
 

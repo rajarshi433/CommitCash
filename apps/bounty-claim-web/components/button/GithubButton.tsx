@@ -6,15 +6,10 @@ import { FaGithub } from "react-icons/fa6";
 import { signIn, signOut } from "next-auth/react";
 
 const GithubButton = () => {
-
-
-    const handleOnclick = async (e) => {
-        e.preventDefault()
-        const res = await signIn("github", {
-            callbackUrl: `/${2}/bankcreds`
+    const handleOnclick = async () => {
+        await signIn("github", {
+            callbackUrl: `/bankcreds`,
         });
-
-        console.log(res)
     };
 
     return (
@@ -29,7 +24,12 @@ const GithubButton = () => {
                 </span>
             </Button>
 
-            <button className="text-white my-4 border border-white p-4" onClick={() => signOut()}>Logout</button>
+            <button
+                className="text-white my-4 border border-white p-4"
+                onClick={() => signOut()}
+            >
+                Logout
+            </button>
         </>
     );
 };

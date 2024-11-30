@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import { Provider } from "@/lib/provider";
 
 export const metadata: Metadata = {
     title: "Claim",
@@ -13,8 +15,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="flex flex-col justify-center items-center bg-[#1C1917] text-white h-screen overflow-hidden">
-                {children}
+            <body className="flex flex-col justify-center items-center bg-[#1C1917] text-white h-screen overflow-x-hidden">
+                <Provider>
+                    {children}
+                    <Toaster />
+                </Provider>
             </body>
         </html>
     );

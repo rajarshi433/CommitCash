@@ -65,6 +65,7 @@ CREATE TABLE "WhiteList" (
 CREATE TABLE "BountyClaims" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
+    "zapHitId" TEXT NOT NULL,
     "githubUsername" TEXT NOT NULL,
     "githubId" INTEGER NOT NULL,
     "bankCreds" TEXT,
@@ -79,6 +80,7 @@ CREATE TABLE "BountyClaims" (
 CREATE TABLE "BountyClaimsOutbox" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
+    "zapHitId" TEXT NOT NULL,
     "githubUsername" TEXT NOT NULL,
     "githubId" INTEGER NOT NULL,
     "bankCreds" TEXT,
@@ -94,6 +96,7 @@ CREATE TABLE "BountyReceives" (
     "id" TEXT NOT NULL,
     "zapId" TEXT NOT NULL,
     "zapHitId" TEXT NOT NULL,
+    "bountyClaimId" TEXT NOT NULL,
     "githubUsername" TEXT NOT NULL,
     "githubId" INTEGER NOT NULL,
     "hasReceived" BOOLEAN NOT NULL DEFAULT true,
@@ -112,7 +115,16 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "WhiteList_zapId_key" ON "WhiteList"("zapId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "BountyClaims_zapHitId_key" ON "BountyClaims"("zapHitId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BountyClaimsOutbox_zapHitId_key" ON "BountyClaimsOutbox"("zapHitId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "BountyReceives_zapHitId_key" ON "BountyReceives"("zapHitId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BountyReceives_bountyClaimId_key" ON "BountyReceives"("bountyClaimId");
 
 -- AddForeignKey
 ALTER TABLE "Zaps" ADD CONSTRAINT "Zaps_zapOwnerId_fkey" FOREIGN KEY ("zapOwnerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -127,10 +139,19 @@ ALTER TABLE "WhiteList" ADD CONSTRAINT "WhiteList_zapId_fkey" FOREIGN KEY ("zapI
 ALTER TABLE "BountyClaims" ADD CONSTRAINT "BountyClaims_zapId_fkey" FOREIGN KEY ("zapId") REFERENCES "Zaps"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "BountyClaims" ADD CONSTRAINT "BountyClaims_zapHitId_fkey" FOREIGN KEY ("zapHitId") REFERENCES "ZapHit"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "BountyClaimsOutbox" ADD CONSTRAINT "BountyClaimsOutbox_zapId_fkey" FOREIGN KEY ("zapId") REFERENCES "Zaps"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BountyClaimsOutbox" ADD CONSTRAINT "BountyClaimsOutbox_zapHitId_fkey" FOREIGN KEY ("zapHitId") REFERENCES "ZapHit"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BountyReceives" ADD CONSTRAINT "BountyReceives_zapId_fkey" FOREIGN KEY ("zapId") REFERENCES "Zaps"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BountyReceives" ADD CONSTRAINT "BountyReceives_zapHitId_fkey" FOREIGN KEY ("zapHitId") REFERENCES "ZapHit"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BountyReceives" ADD CONSTRAINT "BountyReceives_bountyClaimId_fkey" FOREIGN KEY ("bountyClaimId") REFERENCES "BountyClaims"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

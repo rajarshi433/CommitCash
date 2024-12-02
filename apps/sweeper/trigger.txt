@@ -1,9 +1,9 @@
 --- Trigger Functiion ---
 
-CREATE OR REPLACE FUNCTION notify_new_user()
+CREATE OR REPLACE FUNCTION notify_new_bounty_claim()
 RETURNS TRIGGER AS $$
 BEGIN
-    PERFORM pg_notify('user_created', row_to_json(NEW)::text);
+    PERFORM pg_notify('new_row', row_to_json(NEW)::text);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -11,7 +11,7 @@ $$ LANGUAGE plpgsql;
 
 --- Trigger ---
 
-CREATE TRIGGER user_created_trigger
-AFTER INSERT ON users
+CREATE TRIGGER bounty_claim_created_trigger
+AFTER INSERT ON BountyClaimsOutbox
 FOR EACH ROW
-EXECUTE FUNCTION notify_new_user();
+EXECUTE FUNCTION notify_new_bounty_claim();

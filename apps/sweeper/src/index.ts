@@ -1,17 +1,11 @@
 import express, { Express } from "express";
 import "dotenv/config";
 import prisma from "@repo/database/client";
+import { getBountyClaims } from "./app";
 
 const app: Express = express();
 
 app.use(express.json());
-
-app.get("/", async (req, res) => {
-    const users = await prisma.user.findMany();
-    res.send({
-        message: "Hello from sweeper",
-    });
-});
 
 const PORT = process.env.PORT || 8001;
 
@@ -22,6 +16,7 @@ const startServer = async () => {
 
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
+            getBountyClaims();
         });
     } catch (error) {
         console.error("Database connection failed", error);
